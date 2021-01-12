@@ -1,0 +1,22 @@
+{
+  "name": "dualcoding",
+  "version": "1.0.0",
+  "description": "Syncronous coding as a VS code Plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StopMakingUsernamesUnique/DualCoding.git"
+  },
+  "keywords": [
+    "Plugin"
+  ],
+  "author": "Kieran Conroy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StopMakingUsernamesUnique/DualCoding/issues"
+  },
+  "homepage": "https://github.com/StopMakingUsernamesUnique/DualCoding#readme"
+}
