@@ -7,7 +7,7 @@ Technologies:
 TypeScript
 Express
 NodeJS
-Svelte
+Svelte \n
 Using Packages From:
 https://github.com/microsoft/vscode-extension-samples
 https://github.com/benawad/vsinder
