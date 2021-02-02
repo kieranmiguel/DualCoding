@@ -7,10 +7,14 @@ Technologies:
 TypeScript
 Express
 NodeJS
-Svelte \n
+Svelte 
+
+
 Using Packages From:
 https://github.com/microsoft/vscode-extension-samples
+
 https://github.com/benawad/vsinder
+
 Icon From:
 https://github.com/microsoft/vscode-codicons/blob/master/src/icons/go-to-file.svg?short_path=4c688f2
 
