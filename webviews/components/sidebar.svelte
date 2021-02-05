@@ -11,12 +11,27 @@ let dotdotdot:String;
 let connecting = true
 let members: Array<{ID:number, connected:boolean}> = [];
     members = [{ID:33, connected:true}, {ID:46, connected:true}, {ID:59, connected:true}];
-
-    
+let sharingString = 'Start Sharing'
+let color = '#0db82f';
+function sharing() {
+    if(sharingString == 'Start Sharing'){
+        sharingString = 'Stop Sharing'
+        color = '#ff3e00';
+        
+    }
+    else if(sharingString == 'Stop Sharing'){
+        sharingString = 'Start Sharing'
+        color = '#0db82f';
+    }
+}
 
 
 </script>
 <style>
+
+button {
+		background-color: var(--theme-color);
+	}
    p{
        font-size: large;
        padding:1vh;
@@ -33,6 +48,13 @@ let members: Array<{ID:number, connected:boolean}> = [];
     }
     div{
         padding:1vh;
+    }
+
+    h3{
+        margin-left:auto;
+        margin-right:auto;
+        margin-top: 1vh;
+        color: rgb(9, 192, 9);
     }
     
 </style>
@@ -61,7 +83,8 @@ let members: Array<{ID:number, connected:boolean}> = [];
     {/each}
 </ul>
 
-<button>Start/Stop Sharing</button>
+<button on:click={sharing} style="--theme-color: {color}" >{sharingString}</button>
+
 
 </div>
 
