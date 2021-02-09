@@ -6,6 +6,20 @@ import { SidebarProvider } from "./SidebarProvider";
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
+
+	let testing = vscode.window.createOutputChannel("Testing");
+	testing.appendLine("LIne");
+	testing.show();
+	vscode.workspace.onDidChangeTextDocument(changeEvent => {
+        testing.appendLine(`Did change: ${changeEvent.document.uri}`);
+
+        for (const change of changeEvent.contentChanges) {
+             testing.appendLine(change.range.toString()); // range of text being replaced
+             testing.appendLine(change.text); // text replacement
+        }
+   });
+
+
 	const sidebarProvider = new SidebarProvider(context.extensionUri);
 	context.subscriptions.push(
 	  vscode.window.registerWebviewViewProvider(
@@ -21,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from dualcoding!');
+		vscode.window.showInformationMessage('mellow!');
 	});
 	
 
