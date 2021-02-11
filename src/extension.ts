@@ -1,24 +1,15 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { SidebarProvider } from "./SidebarProvider";
+import { SidebarProvider } from "./components/SidebarProvider";
+import { TextWatcher } from "./components/TextWatcher";
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-
-	let testing = vscode.window.createOutputChannel("Testing");
-	testing.appendLine("LIne");
-	testing.show();
-	vscode.workspace.onDidChangeTextDocument(changeEvent => {
-        testing.appendLine(`Did change: ${changeEvent.document.uri}`);
-
-        for (const change of changeEvent.contentChanges) {
-             testing.appendLine(change.range.toString()); // range of text being replaced
-             testing.appendLine(change.text); // text replacement
-        }
-   });
-
+	
+	const textwatcher = new TextWatcher();
+	
 
 	const sidebarProvider = new SidebarProvider(context.extensionUri);
 	context.subscriptions.push(
