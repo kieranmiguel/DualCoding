@@ -6,7 +6,7 @@ import {TextWatcher}  from '../../src/components/TextWatcher';
 }
 
 const textwatcher = new TextWatcher();
-
+    
 
 let ID = getRandomInt(1000);
 var connectID:number = 0;

@@ -24,9 +24,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// The commandId parameter must match the command field in package.json
 	let disposable = vscode.commands.registerCommand('dualcoding.helloWorld', () => {
 		// The code you place here will be executed every time your command is executed
-
+		let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words.txt');
 		// Display a message box to the user
-		vscode.window.showInformationMessage('mellow!');
+		textwatcher.textGrabber(uri); 
 	});
 	
 
