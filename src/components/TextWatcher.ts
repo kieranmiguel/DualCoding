@@ -47,20 +47,10 @@ textWatcher(array:string[]){
          testing.appendLine(change.text);  
          testing.appendLine("Array:");
          //Multiple Lines
-       /*  if(change.range.start.line < change.range.end.line && change.text.length === 0){
-           var lines = change.range.end.line - change.range.start.line;
-              for( var a = 0; a < lines; a++ ){
-                testing.appendLine("BcSPCML");
-            if(array[change.range.start.line + a ]){
-              string = array[change.range.start.line + a];
+         if(change.range.start.line !== change.range.end.line && change.text.length === 0){
+              
               }
-              else{ string = '';}
-                 string = string.substr(0, change.range.start.character) + string.substr(change.range.end.character);   
-                  array[change.range.start.line + a] = string;
-                  string = '';
-              }
-              }
-          */
+          
          // Singular Line
           if(change.text.length !== 0){
             if(array[change.range.start.line]){

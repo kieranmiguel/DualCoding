@@ -1,18 +1,16 @@
 <script lang="ts">
-import {TextWatcher}  from '../../src/components/TextWatcher';
+
 
     function getRandomInt(max: number) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-const textwatcher = new TextWatcher();
+
 
 
 let ID = getRandomInt(1000);
 var connectID:number = 0;
 var text:number;
-let dotdotdot:String;
-let connecting = true
 let members: Array<{ID:number, connected:boolean}> = [];
     members = [{ID:33, connected:true}, {ID:46, connected:true}, {ID:59, connected:true}];
 let sharingString = 'Start Sharing'
