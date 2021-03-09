@@ -1,30 +1,37 @@
 import * as vscode from 'vscode';
 import { resolveCliPathFromVSCodeExecutablePath } from 'vscode-test';
 
+
+var array:string[] = [''];
+let testing = vscode.window.createOutputChannel("Testing");
+
+testing.appendLine("Start of Test------");
+testing.show();
 export class TextWatcher{
 
-textGrabber(uri:vscode.Uri) {
-  var array: string[] = [''];
 
+
+async textGrabber(uri:vscode.Uri) {
+
+vscode.workspace.saveAll();
+const text = async (uri:vscode.Uri) => {
+  var arraytg: string[] = [''];
   vscode.workspace.openTextDocument(uri).then((document) => {
     var i:number = document.lineCount;
-      for(var a:number = 0; a < i; a++){
-        
-        array[a] = document.lineAt(a).text;
-
+      for(var a:number = 0; a < i; a++){      
+        arraytg[a] = document.lineAt(a).text;      
     }
-    
   });
-    
-  return array;
+  return Promise.resolve(arraytg);
+};
+
+array = await text(uri);
+ 
 }
 
-textWatcher(array:string[]){
+textWatcher(){
 
-  let testing = vscode.window.createOutputChannel("Testing");
-
-  testing.appendLine("Start of Test------");
-  testing.show();
+ 
 
   var string:string;
 
@@ -33,7 +40,7 @@ textWatcher(array:string[]){
               
     for (const change of changeEvent.contentChanges) {   
       if(change.range.end.character - change.range.start.character + 1 === change.text.length || change.text.length === 0){
-         testing.appendLine("start line:");
+      /*   testing.appendLine("start line:");
          testing.appendLine(change.range.start.line.toString());
          testing.appendLine("end line");
          testing.appendLine(change.range.end.line.toString());
@@ -45,7 +52,7 @@ textWatcher(array:string[]){
          testing.appendLine(change.text.length.toString());
          testing.appendLine("text:");
          testing.appendLine(change.text);  
-         testing.appendLine("Array:");
+         testing.appendLine("Array:"); */
          //Multiple Lines
          if(change.range.start.line !== change.range.end.line && change.text.length === 0){
               
@@ -87,15 +94,11 @@ textWatcher(array:string[]){
 }
 
     constructor(){
-
-            
-
             //loader 
             let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words.txt');
-            var array:string[] = [''];
-            array = this.textGrabber(uri);
+            this.textGrabber(uri);
             //Watcher
-            this.textWatcher(array);
+            this.textWatcher();
 
         
 }
