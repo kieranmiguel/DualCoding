@@ -8,6 +8,12 @@ export class user extends BaseEntity{
     @Column("text", { array: true })
     contentBody: string[];
 
+    @Column({nullable: true})
+    createdBy: number;
+
+    
+
+
     
 
 

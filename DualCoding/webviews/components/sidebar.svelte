@@ -1,7 +1,15 @@
 <script lang="ts">
 import { dataset_dev } from "svelte/internal";
 
-
+async function http(
+			request: RequestInfo,
+		  ): Promise<any> {
+			const response = await fetch(request, {
+            });
+			const body = await response.json();
+			return body;
+		  }
+	  
 
 
 
@@ -66,11 +74,13 @@ button {
 
 <form
     on:submit|preventDefault={async () => {
-        const response = await fetch(`http://localhost:3002/Users`)
-        const {user} = await response.json()
-        console.log(user)
-        connectID = 12;
+        console.log(text)
+        const data = await http(
+			`http://localhost:3002/Users?id=${text}`,
+			
+		  );
         
+          connectID = data.auser[0].id
         
     }}>
     <input type="number" bind:value = {text} />

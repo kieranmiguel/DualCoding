@@ -21,6 +21,10 @@ __decorate([
     typeorm_1.Column("text", { array: true }),
     __metadata("design:type", Array)
 ], user.prototype, "contentBody", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", Number)
+], user.prototype, "createdBy", void 0);
 user = __decorate([
     typeorm_1.Entity()
 ], user);

@@ -29,6 +29,10 @@ const user_1 = require("./entities/user");
         synchronize: true
     });
     const app = express_1.default();
+    app.use(function (_req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        next();
+    });
     app.use(express_1.default.json());
     app.get('/', (_req, res) => {
         res.send('Hello');
@@ -37,13 +41,16 @@ const user_1 = require("./entities/user");
         console.log('Listening on localhost:3002');
     });
     app.post("/Users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        console.dir(req.body);
         const auser = yield user_1.user.create({
-            contentBody: req.body
+            contentBody: req.body,
+            createdBy: 1,
         }).save();
         res.send({ auser });
     }));
     app.get("/Users", (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const auser = yield user_1.user.find({ where: { id: 12 } });
+        console.log(_req.query.id);
+        const auser = yield user_1.user.find({ where: { id: _req.query.id } });
         res.send({ auser });
     }));
 }))();

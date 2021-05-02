@@ -18,6 +18,10 @@ import { user } from "./entities/user";
     });
     
     const app = express();
+    app.use(function(_req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+        next();
+      });
     app.use(express.json());
     app.get('/', (_req,res) => {
         res.send('Hello');
@@ -27,19 +31,24 @@ import { user } from "./entities/user";
     });
 
     
+    
 
     
     
     app.post("/Users", async (req,res) => {
+        console.dir(req.body)
         const auser:user = await user.create({
-            contentBody: req.body}
-                ).save();
+            contentBody: req.body,
+            createdBy: 1,
+            }).save();
         
         res.send({auser});
     });
 
    app.get("/Users", async (_req, res) => {
-        const auser = await user.find({where: {id: 12}});
+       console.log(_req.query.id)
+        const auser = await user.find({where: {id: _req.query.id}});
+        
 
         res.send({auser});
     });
