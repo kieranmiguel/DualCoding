@@ -1,5 +1,8 @@
 <script lang="ts">
 import { dataset_dev } from "svelte/internal";
+import { getContext, setContext } from 'svelte'
+//import type {ServerData} from '../../src/globals'
+//import type {PageData} from '../../src/globals'
 
 async function http(
 			request: RequestInfo,
@@ -20,12 +23,15 @@ async function http(
 
 
 let ID = getRandomInt(1000);
+setContext('TextWatcherEnable', false)
 var connectID:number = 0;
 var text:number;
 let members: Array<{ID:number, connected:boolean}> = [];
     members = [{ID:33, connected:true}, {ID:46, connected:true}, {ID:59, connected:true}];
 let sharingString = 'Start Sharing'
+let acceptingString = 'Start Accepting'
 let color = '#0db82f';
+let color2 = '#0db82f';
 function sharing() {
     if(sharingString == 'Start Sharing'){
         sharingString = 'Stop Sharing'
@@ -35,6 +41,17 @@ function sharing() {
     else if(sharingString == 'Stop Sharing'){
         sharingString = 'Start Sharing'
         color = '#0db82f';
+    }
+}
+function accepting(){
+    if(acceptingString == 'Start Accepting'){
+        acceptingString = 'Stop Accepting'
+        color2 = '#ff3e00';
+        
+    }
+    else if(acceptingString == 'Stop Accepting'){
+        acceptingString = 'Start Accepting'
+        color2 = '#0db82f';
     }
 }
 
@@ -86,7 +103,9 @@ button {
     <input type="number" bind:value = {text} />
 </form>
 
+<button on:click={accepting} style="--theme-color: {color2}" >{acceptingString}</button>
 
+<hr/>
 
 <p>Lobby</p>
 <ul>

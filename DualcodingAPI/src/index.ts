@@ -36,13 +36,15 @@ import { user } from "./entities/user";
     
     
     app.post("/Users", async (req,res) => {
+        
         console.dir(req.body)
         const auser:user = await user.create({
-            contentBody: req.body,
+            contentBody: req.body.pageData,
             createdBy: 1,
             }).save();
         
         res.send({auser});
+        
     });
 
    app.get("/Users", async (_req, res) => {

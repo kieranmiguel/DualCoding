@@ -1,7 +1,11 @@
 import { AsyncLocalStorage } from 'async_hooks';
 import * as vscode from 'vscode';
 import { PageData }  from '../globals';
+import { getContext, setContext } from 'svelte';
 
+  
+
+  
 
 
 
@@ -9,13 +13,13 @@ let testing = vscode.window.createOutputChannel("Testing");
 
 testing.appendLine("Start of Test------");
 testing.show();
+
+
 export class TextWatcher{
 
-  constructor(){
+  constructor(context: vscode.ExtensionContext){
     //loader 
-   
     
-    let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words.txt');
     
     
     //Watcher
@@ -39,16 +43,8 @@ vscode.workspace.openTextDocument(uri).then((document) => {
       for(var a:number = 0; a < i; a++){      
         arraytg[a] = document.lineAt(a).text;          
     }
-    PageData.data = arraytg;
-    testing.appendLine("pulling from save");
-    testing.appendLine(PageData.data.toString());
-    
-    
+    PageData.data = arraytg;  
   });
-  
-
-  
-  
 
 }
 
@@ -57,39 +53,57 @@ textWatcher(){
  
 
   var string:string;
+  var a = 0;   
+  
 
-  vscode.workspace.onDidChangeTextDocument(changeEvent => {     
+  vscode.workspace.onDidChangeTextDocument(changeEvent => {  
+  
     for (const change of changeEvent.contentChanges) {   
-      if(change.range.end.character - change.range.start.character + 1 === change.text.length || change.text.length === 0){
-        /* testing.appendLine("start line:");
-         testing.appendLine(change.range.start.line.toString());
-         testing.appendLine("end line");
-         testing.appendLine(change.range.end.line.toString());
-         testing.appendLine("Start Char:");
-         testing.appendLine(change.range.start.character.toString()); 
-         testing.appendLine("End Char:");
-         testing.appendLine(change.range.end.character.toString()); 
-         testing.appendLine("length:");
-         testing.appendLine(change.text.length.toString());
-         testing.appendLine("text:");
-         testing.appendLine(change.text);  
-         */
-         testing.appendLine("Array:"); 
-         //Multiple Lines
-         
-
-        //BCSPC
-         if(change.range.start.line !== change.range.end.line && change.text.length === 0){
+    //if fetch() sharing = true{ a = 0,...
+        if(a === 0){
           let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words.txt'); 
-            
+         this.textGrabber(uri);
+         a = 1;
+        }
+        console.log(JSON.stringify(change));
+      if(change.text.toString() !== "\\r\\n"){
+        
+        
+        //Backspace Mutiple Lines
+        
+         if(change.range.start.line !== change.range.end.line && change.text.length === 0){
+          console.log("BSCPC Mutiple Lines");
+          let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words.txt'); 
           this.textGrabber(uri);
-           
+          
+         }
+         //Paste
+        else if(change.range.start.line !== change.range.end.line){
+          console.log("Paste");
+          let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words.txt'); 
+          this.textGrabber(uri);
+        }
+
+        /*
+          var tokens:string[] = change.text.toString().split("\\r\\n");
+          console.log(tokens.toString());
+          for(var b = 0; a < (change.range.end.line - change.range.start.line); b++ ){
+            if(PageData.data[change.range.start.line + b]){
+             string = PageData.data[change.range.start.line + b];
+             }
+             else{ string = '';}
+             string = string.substr(0, change.range.start.character) + tokens[b] + string.substr(change.range.end.character + change.text.length);
                
-          
-              }
-          
+           PageData.data[change.range.start.line] = string;
+           string = '';
+           console.log("array: " + PageData.data.toString());
+            }
+           }
+        */
+                   
          // Singular Line
           else if(change.text.length !== 0){
+          console.log("Singular Line");
             if(PageData.data[change.range.start.line]){
             string = PageData.data[change.range.start.line];
             }
@@ -98,10 +112,11 @@ textWatcher(){
               
           PageData.data[change.range.start.line] = string;
           string = '';
+          console.log("array: " + PageData.data.toString());
           }
-
+        //Backspace Singular Line
           else if (change.range.start.line === change.range.end.line){
-            testing.appendLine("BcSPC");
+            console.log("Backspace Singular Line");
             if(PageData.data[change.range.start.line]){
               string = PageData.data[change.range.start.line];
               }
@@ -110,20 +125,21 @@ textWatcher(){
             string = string.substr(0, change.range.start.character) + string.substr(change.range.end.character);   
             PageData.data[change.range.start.line] = string;
             string = '';
+            console.log("array: " + PageData.data.toString());
           }
-          testing.appendLine(PageData.data.toString());
+          
+          
+          ;
           
           
           
           
-          }
+      }
      // 
      // text replacement
-        }
-      }
-    
-    
-    );
+    }
+      
+   });
 }
 
     

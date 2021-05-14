@@ -43,7 +43,7 @@ const user_1 = require("./entities/user");
     app.post("/Users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.dir(req.body);
         const auser = yield user_1.user.create({
-            contentBody: req.body,
+            contentBody: req.body.pageData,
             createdBy: 1,
         }).save();
         res.send({ auser });
