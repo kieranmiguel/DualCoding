@@ -109,7 +109,7 @@ textWatcher(){
             }
             else{ string = '';}
             string = string.substr(0, change.range.start.character) + change.text + string.substr(change.range.end.character + change.text.length);
-              
+            string = string.split('\r\n').join('');
           PageData.data[change.range.start.line] = string;
           string = '';
           console.log("array: " + PageData.data.toString());
