@@ -5,6 +5,7 @@
 {
 	"version": "0.2.0",
 	"configurations": [
+		
 		{
 			"name": "Run Extension",
 			"type": "extensionHost",
@@ -13,7 +14,7 @@
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [
-				"${workspaceFolder}/dist/**/*.js"
+				"${workspaceFolder}/DualCoding/dist/**/*.js"
 			],
 			
 		},

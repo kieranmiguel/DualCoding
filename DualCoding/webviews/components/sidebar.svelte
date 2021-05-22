@@ -1,4 +1,19 @@
 <script lang="ts">
+import { dataset_dev } from "svelte/internal";
+import { getContext, setContext } from 'svelte'
+//import type {ServerData} from '../../src/globals'
+//import type {PageData} from '../../src/globals'
+
+async function http(
+			request: RequestInfo,
+		  ): Promise<any> {
+			const response = await fetch(request, {
+            });
+			const body = await response.json();
+			return body;
+		  }
+	  
+
 
 
     function getRandomInt(max: number) {
@@ -7,14 +22,16 @@
 
 
 
-
 let ID = getRandomInt(1000);
+setContext('TextWatcherEnable', false)
 var connectID:number = 0;
 var text:number;
 let members: Array<{ID:number, connected:boolean}> = [];
     members = [{ID:33, connected:true}, {ID:46, connected:true}, {ID:59, connected:true}];
 let sharingString = 'Start Sharing'
+let acceptingString = 'Start Accepting'
 let color = '#0db82f';
+let color2 = '#0db82f';
 function sharing() {
     if(sharingString == 'Start Sharing'){
         sharingString = 'Stop Sharing'
@@ -24,6 +41,17 @@ function sharing() {
     else if(sharingString == 'Stop Sharing'){
         sharingString = 'Start Sharing'
         color = '#0db82f';
+    }
+}
+function accepting(){
+    if(acceptingString == 'Start Accepting'){
+        acceptingString = 'Stop Accepting'
+        color2 = '#ff3e00';
+        
+    }
+    else if(acceptingString == 'Stop Accepting'){
+        acceptingString = 'Start Accepting'
+        color2 = '#0db82f';
     }
 }
 
@@ -52,12 +80,7 @@ button {
         padding:1vh;
     }
 
-    h3{
-        margin-left:auto;
-        margin-right:auto;
-        margin-top: 1vh;
-        color: rgb(9, 192, 9);
-    }
+    
     
 </style>
 
@@ -67,14 +90,22 @@ button {
  <p>Connections ID: {connectID} </p>
 
 <form
-    on:submit|preventDefault={() => {
-        connectID = text;
+    on:submit|preventDefault={async () => {
+        console.log(text)
+        const data = await http(
+			`http://localhost:3002/Users?id=${text}`,
+			
+		  );
+        
+          connectID = data.auser[0].id
         
     }}>
     <input type="number" bind:value = {text} />
 </form>
 
+<button on:click={accepting} style="--theme-color: {color2}" >{acceptingString}</button>
 
+<hr/>
 
 <p>Lobby</p>
 <ul>

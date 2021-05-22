@@ -22,6 +22,8 @@ export default fs
         file: "out/compiled/" + name + ".js",
       },
       plugins: [
+        typeCheck(),
+      
         svelte({
           // enable run-time checks when not in production
           dev: !production,
@@ -66,3 +68,15 @@ export default fs
       },
     };
   });
+
+  function typeCheck() {
+    return {
+      writeBundle() {
+        require('child_process').spawn('svelte-check', {
+          stdio: ['ignore', 'inherit', 'inherit'],
+          shell: true
+        });
+      }
+    };
+  }
+  
