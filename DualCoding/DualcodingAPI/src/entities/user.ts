@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AfterUpdate, BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class user extends BaseEntity{
@@ -8,8 +8,13 @@ export class user extends BaseEntity{
     @Column("text", { array: true })
     contentBody: string[];
 
-    @Column({nullable: true})
-    createdBy: number;
+    @Column("text", {unique: true})
+    githubID: string;
+
+    @Column("text", {nullable: true})
+    name: string;
+    
+    
 
     
 

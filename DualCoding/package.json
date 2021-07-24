@@ -17,7 +17,10 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:dualcoding.helloWorld",
+		"onCommand:dualcoding.SendData",
+		"onCommand:dualcoding.GetData",
+		"onCommand:dualcoding.UpdateData",
+		"onCommand:dualcoding.Authenticate",
 		"onView:dualcoding-sidebar"
 	],
 	"main": "./dist/extension.js",
@@ -44,8 +47,24 @@
 		},
 		"commands": [
 			{
-				"command": "dualcoding.helloWorld",
-				"title": "Hello World"
+				"command": "dualcoding.SendData",
+				"category": "DualCoding",
+				"title": "Send Data"
+			},
+			{
+				"command": "dualcoding.GetData",
+				"category": "DualCoding",
+				"title": "Get Data"
+			},
+			{
+				"command": "dualcoding.UpdateData",
+				"category": "DualCoding",
+				"title": "Update Data"
+			},
+			{
+				"command": "dualcoding.Authenticate",
+				"category": "DualCoding",
+				"title": "Re-Authenticate with Github"
 			}
 		]
 	},
@@ -68,6 +87,7 @@
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.0.4",
 		"@types/node": "^12.11.7",
+		"@types/polka": "^0.5.3",
 		"@types/vscode": "^1.52.0",
 		"@types/whatwg-fetch": "0.0.33",
 		"@typescript-eslint/eslint-plugin": "^4.9.0",
@@ -94,6 +114,11 @@
 	},
 	"homepage": "https://github.com/StopMakingUsernamesUnique/DualCoding#readme",
 	"dependencies": {
-		"rollup": "^2.41.0"
+		"knockout": "^3.5.1",
+		"passport": "^0.4.1",
+		"passport-github": "^1.1.0",
+		"polka": "^0.5.2",
+		"rollup": "^2.41.0",
+		"rxjs": "^7.1.0"
 	}
 }

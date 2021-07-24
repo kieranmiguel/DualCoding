@@ -9,19 +9,11 @@ import { getContext, setContext } from 'svelte';
 
 
 
-let testing = vscode.window.createOutputChannel("Testing");
-
-testing.appendLine("Start of Test------");
-testing.show();
 
 
 export class TextWatcher{
 
   constructor(context: vscode.ExtensionContext){
-    //loader 
-    
-    
-    
     //Watcher
     this.textWatcher();
 
@@ -53,18 +45,21 @@ textWatcher(){
  
 
   var string:string;
-  var a = 0;   
+  var a = 0;  
+  
+  if(a === 0){
+    let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words.txt'); 
+   this.textGrabber(uri);
+   a = 1;
+  }
+
+ console.log(PageData.data.toString);
   
 
   vscode.workspace.onDidChangeTextDocument(changeEvent => {  
   
     for (const change of changeEvent.contentChanges) {   
     //if fetch() sharing = true{ a = 0,...
-        if(a === 0){
-          let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words.txt'); 
-         this.textGrabber(uri);
-         a = 1;
-        }
         console.log(JSON.stringify(change));
       if(change.text.toString() !== "\\r\\n"){
         

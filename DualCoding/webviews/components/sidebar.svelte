@@ -1,8 +1,6 @@
 <script lang="ts">
 import { dataset_dev } from "svelte/internal";
-import { getContext, setContext } from 'svelte'
-//import type {ServerData} from '../../src/globals'
-//import type {PageData} from '../../src/globals'
+
 
 async function http(
 			request: RequestInfo,
@@ -22,8 +20,10 @@ async function http(
 
 
 
+//tsvscode.setAcceptingState(false);
+//tsvscode.setSharingState(false);
+
 let ID = getRandomInt(1000);
-setContext('TextWatcherEnable', false)
 var connectID:number = 0;
 var text:number;
 let members: Array<{ID:number, connected:boolean}> = [];
@@ -36,22 +36,25 @@ function sharing() {
     if(sharingString == 'Start Sharing'){
         sharingString = 'Stop Sharing'
         color = '#ff3e00';
+  //      tsvscode.setSharingState(false)
         
     }
     else if(sharingString == 'Stop Sharing'){
         sharingString = 'Start Sharing'
         color = '#0db82f';
+    //    tsvscode.setSharingState(true)
     }
 }
 function accepting(){
     if(acceptingString == 'Start Accepting'){
         acceptingString = 'Stop Accepting'
         color2 = '#ff3e00';
-        
+      //  tsvscode.setAcceptingState(false)
     }
     else if(acceptingString == 'Stop Accepting'){
         acceptingString = 'Start Accepting'
         color2 = '#0db82f';
+        //tsvscode.setAcceptingState(true)
     }
 }
 
