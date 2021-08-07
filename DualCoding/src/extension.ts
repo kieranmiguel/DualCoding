@@ -8,17 +8,21 @@ import { TextPanel } from './components/TextPanel';
 import { TextWriter } from './components/TextWriter';
 import { DatabaseWatcher } from './components/DatabaseWatcher';
 import { authenticate } from './authenticate';
+import { TokenManager } from './TokenManager';
 
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
+	TokenManager.globalState = context.globalState;
+
+
 	
 	
 	
 	const textwatcher = new TextWatcher(context);
-//	var databasewatcher =  new DatabaseWatcher(context);
+	var databasewatcher =  new DatabaseWatcher(context);
 	
 	
 
@@ -64,12 +68,17 @@ export function activate(context: vscode.ExtensionContext) {
 
 	
 	context.subscriptions.push(getData);
-	
+	/*
 	context.subscriptions.push(
 	vscode.commands.registerCommand('dualcoding.Authenticate', () => {
-		authenticate();
+		authenticate(() => {
+            webviewView.webview.postMessage({
+              type: "token",
+              value: TokenManager.getToken(),
+              }););
 	})
 	);
+	*/
 	
 	
 

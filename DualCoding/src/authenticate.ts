@@ -1,9 +1,13 @@
 import * as vscode from 'vscode';
 import * as polka from 'polka';
 import { applyBindingAccessorsToNode } from 'knockout';
+import { TokenManager } from './TokenManager';
 
 
-export const authenticate = () => {
+export const authenticate = (fn: () => void) => {
+    
+
+    
     console.log("called");
     const app = polka();
 
@@ -13,15 +17,21 @@ export const authenticate = () => {
             res.end('<h1>Something Went Wrong</h1>');
             return;
         }
-        console.log(token);
+        await TokenManager.setToken(token);
         res.end('Auth Was successful, you can close this now');
-    });
+
+        (app as any).server.close();
+        fn();
+       });
     
-    app.listen(54321), (err: Error) => {
+
+    app.listen(54321, (err: Error) => {
         if(err){
             vscode.window.showErrorMessage(err.message);
+        } else{
+        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse("http://localhost:3002/auth/github"));
         }
-        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`http://localhost:3002/auth/github`));
-    };
+    });
+    
     
 };

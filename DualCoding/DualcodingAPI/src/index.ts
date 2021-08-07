@@ -10,6 +10,9 @@ import { ProductSubscriber } from "./ProductSubscriber";
 import { Strategy as GitHubStrategy } from "passport-github";
 import passport from "passport";
 import jwt from 'jsonwebtoken';
+import cors from "cors";
+import { isAuth } from "./isAuth";
+import { page } from "./entities/page";
 
 
 (async () => {
@@ -31,6 +34,7 @@ import jwt from 'jsonwebtoken';
     
     
     const app = express();
+    app.use(cors({origin: "*"}));
     app.use(passport.initialize());
     passport.serializeUser((user: any, done) =>{
         done(null, user.accessToken);
@@ -49,8 +53,8 @@ import jwt from 'jsonwebtoken';
             
             }
             else{
-                let body: string[] = [''];
-            user1 = await user.create({name: profile.displayName, githubID: profile.id, contentBody: body }).save();
+                
+            user1 = await user.create({name: profile.username, githubID: profile.id}).save();
             }
         
             
@@ -59,13 +63,47 @@ import jwt from 'jsonwebtoken';
         }
         )
     );   
+
+        //User Auth
+    app.get("/me", async (req, res) => {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+          res.send({ user: null });
+          return;
+        }
+    
+        const token = authHeader.split(" ")[1];
+        if (!token) {
+          res.send({ user: null });
+          return;
+        }
+    
+        let userId = "";
+    
+        try {
+          const payload: any = jwt.verify(token, process.env.JSON_WEB_TOKEN);
+          userId = payload.userId;
+        } catch (err) {
+          res.send({ user: null });
+          return;
+        }
+    
+        if (!userId) {
+          res.send({ user: null });
+          return;
+        }
+    
+        const user1 = await user.findOne(userId);
+    
+        res.send({ user1 });
+      });
     
 
     app.get('/auth/github', passport.authenticate('github', {session: false }));
 
     app.get('/auth/github/callback', 
     passport.authenticate('github', {session: false }),
-    (req :any, res) => {
+    (req:any, res) => {
         res.redirect(`http://localhost:54321/auth/${req.user.accessToken}`);
     });
 
@@ -82,42 +120,28 @@ import jwt from 'jsonwebtoken';
         console.log('Listening on localhost:3002');
     });
 
-    app.put("/Users", async (_req,res) => {
-        
-        console.dir(_req.body);
+    //CRUD Routes
+    
+    app.post("/page", isAuth, async (req, res) => {
 
-        await getConnection()
-        .createQueryBuilder()
-        .update(user)
-        .set({ contentBody: _req.body.pageData})
-        .where("id = :id", { id: _req.query.id})
-        .execute();
-        /*
-        const auser = await user.find({where: {id: _req.query.id}});
-        if(!auser){
-            res.send({auser:null});
-            return;
-        }
-            auser.contentBody = req.body.pageData;
-            await auser.save();
-        */
-        res.send({user});
-        
-    });
-    
+      const apage = await page.findOne(req.body.address);
+    if (!apage) {
+      const apage:page = await page.create({
+        contentBody: req.body.pageData,
+        address:req.body.address
+        }).save();
+        res.send({ apage });
+         return;
+    }
+    if (apage.creatorId !== req.user) {
+      throw new Error("not authorized");
+    }
 
-    
-    
-    app.post("/Users", async (req,res) => {
-        
-        console.dir(req.body);
-        const auser:user = await user.create({
-            contentBody: req.body.pageData,
-            }).save();
-        
-        res.send({auser});
-        
-    });
+    apage.contentBody = req.body.pageData;
+    await apage.save();
+    res.send({ page });
+  });
+
 
    app.get("/Users", async (_req, res) => {
        console.log(_req.query.id);
