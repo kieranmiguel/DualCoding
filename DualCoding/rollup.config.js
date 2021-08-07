@@ -48,6 +48,7 @@ export default fs
         typescript({
           tsconfig: "webviews/tsconfig.json",
           sourceMap: !production,
+          rootDir: './src',
           inlineSources: !production,
         }),
 

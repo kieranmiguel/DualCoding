@@ -1,22 +1,29 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { PageData } from './globals';
+import { PageData, ServerData } from './globals';
 import { SidebarProvider } from "./components/SidebarProvider";
 import { TextWatcher } from "./components/TextWatcher";
 import { TextPanel } from './components/TextPanel';
 import { TextWriter } from './components/TextWriter';
+import { DatabaseWatcher } from './components/DatabaseWatcher';
+import { authenticate } from './authenticate';
+import { TokenManager } from './TokenManager';
 
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	context.globalState;
+	TokenManager.globalState = context.globalState;
+
+
+	
+	
 	
 	const textwatcher = new TextWatcher(context);
-
-	const textWriter = new TextWriter();
+	var databasewatcher =  new DatabaseWatcher(context);
+	
 	
 
 	const sidebarProvider = new SidebarProvider(context.extensionUri);
@@ -26,13 +33,58 @@ export function activate(context: vscode.ExtensionContext) {
 		sidebarProvider
 	  )
 	);
+	
+	
+	let getData = vscode.commands.registerCommand('dualcoding.GetData', async () => {
+		
+		
+	/*	console.log('Get Data');
+		 const text = 1;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('dualcoding.helloWorld', async () => {
+		async function http(
+			request: RequestInfo,
+		  ): Promise<any> {
+			const response = await fetch(request, {
+            });
+			const body = await response.json();
+			return body;
+		  }
+
+		  
+			
+			const data = await http(
+				`http://localhost:3002/Users?id=${text}`,
+				
+			  );
+			  console.dir(data.auser);
+			  ServerData.data = data.auser[0].contentBody;
+			  let uri = vscode.Uri.file('/Users/Idot/Documents/DualCoding-Example/words2.txt'); 
+			  const textWriter = new TextWriter(uri);
+		*/	  
+		});
+			  
+			
+	
+
+	
+	context.subscriptions.push(getData);
+	/*
+	context.subscriptions.push(
+	vscode.commands.registerCommand('dualcoding.Authenticate', () => {
+		authenticate(() => {
+            webviewView.webview.postMessage({
+              type: "token",
+              value: TokenManager.getToken(),
+              }););
+	})
+	);
+	*/
+	
+	
+
+	let sendData = vscode.commands.registerCommand('dualcoding.SendData', async () => {
 		// The code you place here will be executed every time your command is executed
-		console.log('Command Run');
+		console.log('Send Data');
 		 
 		var data2 = {"pageData": PageData.data};
 		
@@ -61,8 +113,46 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(sendData);
+
+	let updateData = vscode.commands.registerCommand('dualcoding.UpdateData', async () => {
+		// The code you place here will be executed every time your command is executed
+		console.log('Update Data');
+		 
+		var data2 = {"pageData": PageData.data};
+
+		const text = 1;
+		
+
+		async function http(
+			request: RequestInfo,
+		): Promise<any> {
+		const response = await fetch(request, {
+		  method: 'PUT',
+		  headers: {
+			'content-type': 'application/json',
+		  },
+		  body: JSON.stringify(data2),
+			  });
+		const body = await response.json();
+		return body;
+		}
+	
+	  
+		  const data = await http(
+			`http://localhost:3002/Users?id=${text}`,
+		  );
+
+		  console.dir(data.auser);
+		
+	});
+	
+
+	context.subscriptions.push(updateData);
 }
+ 
+
+
 
 // this method is called when your extension is deactivated
 export function deactivate() {}

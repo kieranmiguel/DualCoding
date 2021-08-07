@@ -1,20 +1,19 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { page } from "./page";
 
 @Entity()
 export class user extends BaseEntity{
     @PrimaryGeneratedColumn()
     id: number; 
 
-    @Column("text", { array: true })
-    contentBody: string[];
+    @Column("text", {unique: true})
+    githubID: string;
 
-    @Column({nullable: true})
-    createdBy: number;
-
-    
-
+    @Column("text", {nullable: true})
+    name: string;
 
     
-
+    @OneToMany(() => page, p => p.creator)
+    pages: Promise<page[]>;
 
 }

@@ -1,8 +1,41 @@
 <script lang="ts">
-import { dataset_dev } from "svelte/internal";
-import { getContext, setContext } from 'svelte'
-//import type {ServerData} from '../../src/globals'
-//import type {PageData} from '../../src/globals'
+
+
+import { onMount } from "svelte";
+
+
+let accessToken = "";
+let loading = true;
+let ID = 0;
+let name = '';
+let loggedin = false; 
+
+
+onMount(async () => {
+        window.addEventListener("message", async (event) => {
+            const message = event.data;
+            switch (message.type) {
+                case "token":
+                    accessToken = message.value;
+                    const response = await fetch(`http://localhost:3002/me`, {
+                        headers: {
+                            authorization: `Bearer ${accessToken}`,
+                        },
+                    });
+                    const data = await response.json();
+                    console.dir(data.user1);
+                    ID = data.user1.id;
+                    name = data.user1.name;
+                    loggedin = true; 
+                    loading = false;
+            }
+        });
+        tsvscode.postMessage({type: "get-token", value: undefined});
+    });
+
+
+tsvscode.postMessage({type: "get-token", value:undefined })
+
 
 async function http(
 			request: RequestInfo,
@@ -16,14 +49,13 @@ async function http(
 
 
 
-    function getRandomInt(max: number) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
+    
 
 
+//tsvscode.setAcceptingState(false);
+//tsvscode.setSharingState(false);
 
-let ID = getRandomInt(1000);
-setContext('TextWatcherEnable', false)
+
 var connectID:number = 0;
 var text:number;
 let members: Array<{ID:number, connected:boolean}> = [];
@@ -36,22 +68,25 @@ function sharing() {
     if(sharingString == 'Start Sharing'){
         sharingString = 'Stop Sharing'
         color = '#ff3e00';
+  //      tsvscode.setSharingState(false);
         
     }
     else if(sharingString == 'Stop Sharing'){
         sharingString = 'Start Sharing'
         color = '#0db82f';
+    //  tsvscode.setSharingState(true);
     }
 }
 function accepting(){
     if(acceptingString == 'Start Accepting'){
         acceptingString = 'Stop Accepting'
         color2 = '#ff3e00';
-        
+      //  tsvscode.setAcceptingState(false);
     }
     else if(acceptingString == 'Stop Accepting'){
         acceptingString = 'Start Accepting'
         color2 = '#0db82f';
+        //tsvscode.setAcceptingState(true);
     }
 }
 
@@ -84,7 +119,11 @@ button {
     
 </style>
 
+    {#if loading}
+<div> loading... </div>
+    {:else if loggedin}
 <div>
+ <p>Hello {name} </p>
  <p>ID : {ID} </p>
  <hr>
  <p>Connections ID: {connectID} </p>
@@ -107,19 +146,30 @@ button {
 
 <hr/>
 
-<p>Lobby</p>
-<ul>
-    {#each members as member (member.ID)}   
-        
-            <li> ID: {member.ID}</li>
-        
-    {/each}
-</ul>
+
 
 <button on:click={sharing} style="--theme-color: {color}" >{sharingString}</button>
 
-
+<br>
+<!-- svelte-ignore missing-declaration -->
+<button on:click={() => {
+    loggedin = false;
+    name = '';
+    ID = 0;
+    accessToken = ''
+    tsvscode.postMessage({type: "log-out", value: undefined});
+}} style="--theme-color: #0078d7 --padding: 20dp" >Log Out</button>
 </div>
+{:else}
+    
+
+     <!-- svelte-ignore missing-declaration -->
+     <button on:click={() => {
+         tsvscode.postMessage({type: "authenticate", value: undefined});
+     }}
+     style="--theme-color: #0078d7 --padding: 20dp" >Log In with Github</button>
+
+ {/if}
 
 
 	
